@@ -1,6 +1,7 @@
 package com.bildungsinstitut.management;
 
 import com.bildungsinstitut.interfaces.Identifiable;
+import com.bildungsinstitut.model.Person;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,26 +14,49 @@ public class InstitutionManagement<T extends Identifiable> {
         items.put(item.getId(), item);
     }
 
-  /*  public T get(String id) {
+    public T get(String id) {
         return items.get(id);
-    } */
-
-    public T get(T item) {
-        return items.get(item.getId());
     }
 
     public Collection<T> getAll() {
         return items.values();
     }
 
-    /*public void remove(String id) {
+    public void remove(String id) {
         items.remove(id);
-    }*/
-    public void remove(T item) {
-        items.remove(item.getId(),item);
     }
 
     public void update(T item) {
         items.put(item.getId(), item);
+    }
+
+    public boolean exists(T item) {
+        if (item instanceof Person) {
+            Person newPerson = (Person) item;
+            for (T existingItem : items.values()) {
+                if (existingItem instanceof Person) {
+                    Person existingPerson = (Person) existingItem;
+                    if (existingPerson.hasSameAttributes(newPerson)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean existEmail(T item){
+        if (item instanceof Person){
+            Person newPerson = (Person) item;
+            for (T existingItem : items.values()){
+                if (existingItem instanceof Person){
+                    Person existingPerson = (Person) existingItem;
+                    if (existingPerson.hasSameEmail(newPerson)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

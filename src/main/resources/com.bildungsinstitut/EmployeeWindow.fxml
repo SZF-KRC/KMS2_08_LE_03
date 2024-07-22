@@ -7,17 +7,31 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bildungsinstitut.view.EmployeeWindowController">
    <children>
-      <TableView layoutX="245.0" layoutY="127.0" prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="tableView" layoutX="197.0" layoutY="45.0" prefHeight="341.0" prefWidth="389.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
+            <TableColumn fx:id="colName" prefWidth="100.0" text="Full Name" />
+            <TableColumn fx:id="colAge" prefWidth="75.0" text="Age" />
+            <TableColumn fx:id="colEmail" prefWidth="100.0" text="Email" />
+            <TableColumn fx:id="colPosition" prefWidth="100.0" text="Position" />
         </columns>
       </TableView>
-      <Button layoutX="38.0" layoutY="127.0" mnemonicParsing="false" text="add" />
-      <TextField layoutX="28.0" layoutY="49.0" />
-      <Label layoutX="14.0" layoutY="6.0" text="Employee" />
+
+      <TextField fx:id="txtFullName" layoutX="28.0" layoutY="49.0" />
+      <TextField fx:id="txtEmail" layoutX="28.0" layoutY="149.0" />
+      <TextField fx:id="txtAge" layoutX="28.0" layoutY="99.0" />
+      <TextField fx:id="txtPosition" layoutX="28.0" layoutY="200.0" />
+
+       <Label layoutX="222.0" layoutY="14.0" text="Employee Management" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+      <Label layoutX="28.0" layoutY="82.0" text="Age" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+      <Label layoutX="28.0" layoutY="30.0" text="Full name" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+      <Label layoutX="28.0" layoutY="132.0" text="Email" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+      <Label layoutX="28.0" layoutY="183.0" text="Position" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+
+       <Button fx:id="btnAdd" layoutX="57.0" layoutY="261.0" mnemonicParsing="false" onAction="#addEmployee" prefHeight="25.0" prefWidth="91.0" text="Add" style="-fx-background-color: #74BFcf; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+      <Button fx:id="btnRemove" layoutX="57.0" layoutY="336.0" mnemonicParsing="false" onAction="#removeEmployee" prefHeight="25.0" prefWidth="91.0" text="Remove" style="-fx-background-color: #74BFcf; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+      <Button fx:id="btnUpdate" layoutX="57.0" layoutY="299.0" mnemonicParsing="false" onAction="#updateEmployee" prefHeight="25.0" prefWidth="91.0" text="Update" style="-fx-background-color: #74BFcf; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+
    </children>
 </AnchorPane>

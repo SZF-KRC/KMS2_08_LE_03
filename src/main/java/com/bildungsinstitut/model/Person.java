@@ -46,4 +46,14 @@ public abstract class Person implements Identifiable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public boolean hasSameAttributes(Person other) {
+        return this.name.equals(other.getName()) &&
+                this.age == other.getAge() &&
+                this.email.equals(other.getEmail());
+    }
+
+    public boolean hasSameEmail(Person other){
+        return this.email.equals(other.getEmail());
+    }
 }

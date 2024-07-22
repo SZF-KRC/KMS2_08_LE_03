@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentData {
-    public void addStudent(Student student){
+    public static void addStudent(Student student){
         try(Connection connection = DatabaseConnection.getConnection()){
             String query = "INSERT INTO student (id,name,age,email) VALUES (?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)){
@@ -19,7 +19,7 @@ public class StudentData {
                 statement.executeUpdate();
             }
 
-            // Vloženie záznamov do spojovacej tabuľky student_course
+           /* // Vloženie záznamov do spojovacej tabuľky student_course
             String studentCourseQuery = "INSERT INTO student_course (student_id, course_id) VALUES (?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(studentCourseQuery)) {
                 for (Course course : student.getCourses()) {
@@ -27,13 +27,13 @@ public class StudentData {
                     statement.setString(2, course.getId());
                     statement.executeUpdate();
                 }
-            }
+            }*/
         }catch (SQLException e){
             e.printStackTrace();
         }
     }
 
-    public List<Student> getAllStudents() {
+    public static List<Student> getAllStudents() {
         List<Student> students = new ArrayList<>();
         String studentQuery = "SELECT * FROM student";
 
@@ -63,7 +63,7 @@ public class StudentData {
                     }
                 }
 
-                Student student = new Student(id, name, age, email, courses);
+                Student student = new Student(id, name, age, email);
                 students.add(student);
             }
         } catch (SQLException e) {
@@ -73,7 +73,7 @@ public class StudentData {
     }
 
 
-    public void removeStudent(Student student){
+    public static void removeStudent(Student student){
         try (Connection connection = DatabaseConnection.getConnection()) {
             // Najprv odstránime záznamy z tabuľky student_course
             String studentCourseQuery = "DELETE FROM student_course WHERE student_id = ?";
@@ -89,6 +89,21 @@ public class StudentData {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateStudent(Student student){
+        try (Connection connection = DatabaseConnection.getConnection()){
+            String query = "UPDATE student SET name = ?, age = ?, email = ? WHERE id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)){
+                statement.setString(1, student.getName());
+                statement.setInt(2, student.getAge());
+                statement.setString(3, student.getEmail());
+                statement.setString(4, student.getId());
+                statement.executeUpdate();
+            }
+        }catch (SQLException e) {
             e.printStackTrace();
         }
     }
