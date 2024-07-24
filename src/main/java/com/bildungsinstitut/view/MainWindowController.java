@@ -11,6 +11,9 @@ import java.io.IOException;
 
 public class MainWindowController {
     @FXML
+    private Button btnHome;
+
+    @FXML
     private Button btnEmployees;
 
     @FXML
@@ -24,17 +27,22 @@ public class MainWindowController {
 
     @FXML
     public void btnEmployeesAction() {
-        loadWindow("/com.bildungsinstitut/EmployeeWindow.fxml");
+        loadWindow("/com/bildungsinstitut/bildungsinstitut/EmployeeWindow.fxml");
     }
 
     @FXML
     public void btnStudentsAction() {
-        loadWindow("/com.bildungsinstitut/StudentWindow.fxml");
+        loadWindow("/com/bildungsinstitut/bildungsinstitut/StudentWindow.fxml");
     }
 
     @FXML
     public void btnCoursesAction() {
-        loadWindow("/com.bildungsinstitut/CourseWindow.fxml");
+        loadWindow("/com/bildungsinstitut/bildungsinstitut/CourseWindow.fxml");
+    }
+
+    @FXML
+    public void btnHomeAction() {
+        loadWindow("/com/bildungsinstitut/bildungsinstitut/HomeWindow.fxml");
     }
 
     private void loadWindow(String fxmlFile) {
@@ -51,6 +59,8 @@ public class MainWindowController {
         setupButtonHandlers(btnStudents);
         setupButtonHandlers(btnEmployees);
         setupButtonHandlers(btnCourses);
+        setupButtonHandlers(btnHome);
+        btnHomeAction();
     }
 
     private void setupButtonHandlers(Button button) {
@@ -59,4 +69,6 @@ public class MainWindowController {
         button.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> button.setStyle("-fx-background-color: #638ac8; -fx-font-weight: bold; -fx-font-size: 12px;"));
         button.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> button.setStyle("-fx-background-color: #c3d8ff; -fx-font-weight: bold; -fx-font-size: 12px;"));
     }
+
+
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CourseData {
 
-    public void addCourse(Course course){
+    public static void addCourse(Course course){
         try(Connection connection = DatabaseConnection.getConnection()){
             String query = "INSERT INTO course (id,name) VALUES (?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)){
@@ -24,7 +24,7 @@ public class CourseData {
         }
     }
     // Metóda na získanie všetkých kurzov
-    public List<Course> getAllCourses() {
+    public static List<Course> getAllCourses() {
         List<Course> courses = new ArrayList<>();
         String query = "SELECT * FROM course";
 
@@ -35,7 +35,8 @@ public class CourseData {
             while (resultSet.next()) {
                 String id = resultSet.getString("id");
                 String name = resultSet.getString("name");
-                courses.add(new Course(id, name));
+                String trainerID = resultSet.getString("trainerID");
+                courses.add(new Course(id, name, trainerID));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,7 +45,7 @@ public class CourseData {
     }
 
     // Metóda na aktualizáciu kurzu
-    public void updateCourse(Course course) {
+    public static void updateCourse(Course course) {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String query = "UPDATE course SET name = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -58,7 +59,7 @@ public class CourseData {
     }
 
     // Metóda na odstránenie kurzu
-    public void deleteCourse(String courseId) {
+    public static void deleteCourse(String courseId) {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String query = "DELETE FROM course WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {

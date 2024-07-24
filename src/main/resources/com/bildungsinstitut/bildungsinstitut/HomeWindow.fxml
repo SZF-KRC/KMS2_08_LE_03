@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bildungsinstitut.view.HomeWindowController">
+    <children>
+        <TableView fx:id="tableView" layoutX="15.0" layoutY="72.0" prefHeight="314.0" prefWidth="571.0">
+            <columns>
+                <TableColumn fx:id="colStudent" prefWidth="114.0" text="Student Name" />
+                <TableColumn fx:id="colStudentEmail" prefWidth="168.0" text="Student Email" />
+                <TableColumn fx:id="colTrainer" prefWidth="115.0" text="Trainer Name" />
+                <TableColumn fx:id="colTrainerEmail" prefWidth="172.0" text="Trainer Email" />
+            </columns>
+        </TableView>
+      <ComboBox layoutX="214.0" layoutY="30.0" prefWidth="150.0" />
+      <Label layoutX="251.0" layoutY="14.0" text="Select Course">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+
+
+    </children>
+</AnchorPane>

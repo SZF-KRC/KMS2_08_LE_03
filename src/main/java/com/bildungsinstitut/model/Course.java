@@ -5,10 +5,12 @@ import com.bildungsinstitut.interfaces.Identifiable;
 public class Course implements Identifiable {
     private String id;
     private String name;
+    private String trainerID;
 
-    public Course(String id, String name) {
+    public Course(String id, String name, String trainerID) {
         this.id = id;
         this.name = name;
+        this.trainerID = trainerID;
     }
 
     @Override
@@ -27,5 +29,13 @@ public class Course implements Identifiable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTrainerID() {
+        return trainerID;
+    }
+
+    public void setTrainerID(String trainerID) {
+        this.trainerID = trainerID;
     }
 }

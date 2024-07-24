@@ -92,7 +92,7 @@ public class StudentWindowController {
 
     @FXML
     private void addStudent(){
-        if (ValidationUtil.validateInputsStudent(txtFullName,txtEmail,txtAge));{
+        if (ValidationUtil.validateInputsStudent(txtFullName,txtEmail,txtAge)){
             String fullName = txtFullName.getText().trim();
             String email = txtEmail.getText().trim();
             int age = Integer.parseInt(txtAge.getText().trim());

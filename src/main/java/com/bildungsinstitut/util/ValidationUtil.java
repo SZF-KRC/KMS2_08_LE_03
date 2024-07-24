@@ -8,11 +8,11 @@ import java.util.regex.Pattern;
 
 public class ValidationUtil {
 
-    public static boolean isNotEmpty(String value) {
+    private static boolean isNotEmpty(String value) {
         return value != null && !value.trim().isEmpty();
     }
 
-    public static boolean isValidAge(String age) {
+    private static boolean isValidAge(String age) {
         if (age == null || !age.matches("\\d+")) {
             return false;
         }
@@ -20,7 +20,7 @@ public class ValidationUtil {
         return ageInt >= 18 && ageInt <= 120;
     }
 
-    public static boolean isValidEmail(String email) {
+    private static boolean isValidEmail(String email) {
         if (email == null) {
             return false;
         }
@@ -30,25 +30,33 @@ public class ValidationUtil {
         return matcher.matches();
     }
 
-    public static boolean isAlpha(String value) {
+    private static boolean isAlpha(String value) {
         return value != null && value.matches("[a-zA-Z\\s]+");
     }
 
+    public static boolean validateInputCourse(TextField txtFullName){
+        if (!isNotEmpty(txtFullName.getText()) || !isAlpha(txtFullName.getText())){
+            showAlert("Invalid Course Name", "Course Name must contain only letters and cannot be empty.");
+            return false;
+        }
+        return true;
+    }
+
     public static boolean validateInputsEmployee(TextField txtFullName,TextField txtEmail, TextField txtAge, TextField txtPosition){
-        if (!ValidationUtil.isNotEmpty(txtFullName.getText()) || !ValidationUtil.isAlpha(txtFullName.getText())){
+        if (!isNotEmpty(txtFullName.getText()) || !isAlpha(txtFullName.getText())){
             showAlert("Invalid Full Name", "Full Name must contain only letters and cannot be empty.");
             return false;
         }
 
-        if (!ValidationUtil.isNotEmpty(txtEmail.getText()) || !ValidationUtil.isValidEmail(txtEmail.getText())){
+        if (!isNotEmpty(txtEmail.getText()) || !isValidEmail(txtEmail.getText())){
             showAlert("Invalid Email", "Email is not in the correct format or is empty.");
             return false;
         }
-        if (!ValidationUtil.isNotEmpty(txtAge.getText()) || !ValidationUtil.isValidAge(txtAge.getText())) {
+        if (!isNotEmpty(txtAge.getText()) || !isValidAge(txtAge.getText())) {
             showAlert("Invalid Age", "Age must be a number between 18 and 120 and cannot be empty.");
             return false;
         }
-        if (!ValidationUtil.isNotEmpty(txtPosition.getText()) || !ValidationUtil.isAlpha(txtPosition.getText())) {
+        if (!isNotEmpty(txtPosition.getText()) || !isAlpha(txtPosition.getText())) {
             showAlert("Invalid Position", "Position must contain only letters and cannot be empty.");
             return false;
         }
@@ -57,16 +65,16 @@ public class ValidationUtil {
     }
 
     public static boolean validateInputsStudent(TextField txtFullName,TextField txtEmail, TextField txtAge){
-        if (!ValidationUtil.isNotEmpty(txtFullName.getText()) || !ValidationUtil.isAlpha(txtFullName.getText())){
+        if (!isNotEmpty(txtFullName.getText()) || !isAlpha(txtFullName.getText())){
             showAlert("Invalid Full Name", "Full Name must contain only letters and cannot be empty.");
             return false;
         }
 
-        if (!ValidationUtil.isNotEmpty(txtEmail.getText()) || !ValidationUtil.isValidEmail(txtEmail.getText())){
+        if (!isNotEmpty(txtEmail.getText()) || !isValidEmail(txtEmail.getText())){
             showAlert("Invalid Email", "Email is not in the correct format or is empty.");
             return false;
         }
-        if (!ValidationUtil.isNotEmpty(txtAge.getText()) || !ValidationUtil.isValidAge(txtAge.getText())) {
+        if (!isNotEmpty(txtAge.getText()) || !isValidAge(txtAge.getText())) {
             showAlert("Invalid Age", "Age must be a number between 18 and 120 and cannot be empty.");
             return false;
         }

@@ -4,6 +4,7 @@ module com.example.bildungsinstitut {
 
     requires org.controlsfx.controls;
     requires java.sql;
+    requires java.desktop;
 
 
     opens com.bildungsinstitut to javafx.graphics, javafx.fxml;
