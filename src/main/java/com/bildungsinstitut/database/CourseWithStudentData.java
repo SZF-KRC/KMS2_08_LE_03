@@ -47,14 +47,15 @@ public class CourseWithStudentData {
 
     public static void removeActiveCourse(CourseWithStudent activeCourse){
         try (Connection connection = DatabaseConnection.getConnection()){
-            String query = "DELETE FROM student_course WHERE (student_id,course_id) VALUES (?,?)";
+            String query = "DELETE FROM student_course WHERE student_id = ? AND course_id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)){
-                statement.setString(1, activeCourse.getCourseID());
-                statement.setString(2, activeCourse.getStudentID());
+                statement.setString(1, activeCourse.getStudentID());
+                statement.setString(2, activeCourse.getCourseID());
                 statement.executeUpdate();
             }
         }catch (SQLException e){
             e.printStackTrace();
         }
     }
+
 }

@@ -13,10 +13,11 @@ public class CourseData {
 
     public static void addCourse(Course course){
         try(Connection connection = DatabaseConnection.getConnection()){
-            String query = "INSERT INTO course (id,name) VALUES (?,?)";
+            String query = "INSERT INTO course (id,name,trainerID) VALUES (?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)){
                 statement.setString(1, course.getId());
                 statement.setString(2,course.getName());
+                statement.setString(3,course.getTrainerID());
                 statement.executeUpdate();
             }
         }catch (SQLException e){
@@ -59,11 +60,11 @@ public class CourseData {
     }
 
     // Metóda na odstránenie kurzu
-    public static void deleteCourse(String courseId) {
+    public static void deleteCourse(Course course) {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String query = "DELETE FROM course WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, courseId);
+                statement.setString(1, course.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

@@ -1,6 +1,9 @@
 package com.bildungsinstitut.util;
 
+import com.bildungsinstitut.model.Course;
+import com.bildungsinstitut.model.Student;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 import java.util.regex.Matcher;
@@ -41,6 +44,8 @@ public class ValidationUtil {
         }
         return true;
     }
+
+
 
     public static boolean validateInputsEmployee(TextField txtFullName,TextField txtEmail, TextField txtAge, TextField txtPosition){
         if (!isNotEmpty(txtFullName.getText()) || !isAlpha(txtFullName.getText())){

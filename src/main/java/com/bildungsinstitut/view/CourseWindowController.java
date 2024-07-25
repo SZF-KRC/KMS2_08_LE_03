@@ -3,6 +3,7 @@ package com.bildungsinstitut.view;
 import com.bildungsinstitut.database.CourseData;
 import com.bildungsinstitut.database.CourseWithStudentData;
 import com.bildungsinstitut.database.EmployeeData;
+import com.bildungsinstitut.database.StudentData;
 import com.bildungsinstitut.management.InstitutionManagement;
 import com.bildungsinstitut.model.Course;
 import com.bildungsinstitut.model.CourseWithStudent;
@@ -10,10 +11,12 @@ import com.bildungsinstitut.model.Employee;
 import com.bildungsinstitut.model.Student;
 import com.bildungsinstitut.util.UniqueID;
 import com.bildungsinstitut.util.ValidationUtil;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
 import java.util.List;
@@ -69,19 +72,32 @@ public class CourseWindowController {
 
     private final ObservableList<Course> courses = FXCollections.observableArrayList();
     private final ObservableList<CourseWithStudent> courseWithStudents = FXCollections.observableArrayList();
+    private List<Employee> employees = FXCollections.observableArrayList();
 
     private final InstitutionManagement<Course> institutionManagementCourse = new InstitutionManagement<>();
     private final InstitutionManagement<CourseWithStudent> institutionManagementCourseWithStudent = new InstitutionManagement<>();
 
     private void loadData(){
+        courses.clear();
+        courseWithStudents.clear();
+        employees.clear();
+
         courses.addAll(CourseData.getAllCourses());
         courses.forEach(institutionManagementCourse::add);
 
         courseWithStudents.addAll(CourseWithStudentData.getAllDataFromCourses());
         courseWithStudents.forEach(institutionManagementCourseWithStudent::add);
 
-        List<Employee> employees = EmployeeData.getAllEmployees();
+        employees.addAll(EmployeeData.getAllEmployees());
         comboBoxTrainer.setItems(FXCollections.observableArrayList(employees));
+
+        comboBoxCourse.setItems(FXCollections.observableArrayList(courses));
+
+        List<Student> students = StudentData.getAllStudents();
+        comboBoxStudent.setItems(FXCollections.observableArrayList(students));
+
+        tableViewMakeCourse.setItems(courses);
+        tableViewCourse.setItems(courseWithStudents);
     }
 
 
@@ -94,37 +110,197 @@ public class CourseWindowController {
         setupButtonHandlers(btnUpdateCourse);
         setupButtonHandlers(btnRemoveFromCourse);
 
+        colCourse.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colTrainer.setCellValueFactory(cellData -> {
+            Course course = cellData.getValue();
+            String trainerName = course.getTrainerName(EmployeeData.getAllEmployees());
+            return new SimpleStringProperty(trainerName);
+        });
+        tableViewMakeCourse.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                txtFullName.setText(newValue.getName());
+                comboBoxTrainer.getSelectionModel().select(employees.stream()
+                        .filter(employee -> employee.getId().equals(newValue.getTrainerID()))
+                        .findFirst()
+                        .orElse(null));
+            }
+        });
+
+        colCourseName.setCellValueFactory(cellData -> {
+            CourseWithStudent courseWithStudent = cellData.getValue();
+            Course course = courses.stream()
+                    .filter(c -> c.getId().equals(courseWithStudent.getCourseID()))
+                    .findFirst()
+                    .orElse(null);
+            return new SimpleStringProperty(course != null ? course.getName() : "Unknown");
+        });
+
+        colCourseStudent.setCellValueFactory(cellData -> {
+            CourseWithStudent courseWithStudent = cellData.getValue();
+            Student student = comboBoxStudent.getItems().stream()
+                    .filter(s -> s.getId().equals(courseWithStudent.getStudentID()))
+                    .findFirst()
+                    .orElse(null);
+            return new SimpleStringProperty(student != null ? student.getName() : "Unknown");
+        });
+
+        colCourseTrainer.setCellValueFactory(cellData -> {
+            CourseWithStudent courseWithStudent = cellData.getValue();
+            Course course = courses.stream()
+                    .filter(c -> c.getId().equals(courseWithStudent.getCourseID()))
+                    .findFirst()
+                    .orElse(null);
+            if (course != null) {
+                String trainerName = course.getTrainerName(employees);
+                return new SimpleStringProperty(trainerName);
+            } else {
+                return new SimpleStringProperty("Unknown");
+            }
+        });
+
         loadData();
     }
+
 
     @FXML
     private void addCourse() {
         if (ValidationUtil.validateInputCourse(txtFullName)){
             String courseName = txtFullName.getText().trim();
-            String trainerID = comboBoxTrainer.getValue().getId();
-            Course course = new Course(Id(),courseName,trainerID);
+            Employee selectedTrainer = comboBoxTrainer.getSelectionModel().getSelectedItem();
 
-            courses.add(course);
-            CourseData.addCourse(course);
-            institutionManagementCourse.add(course);
+            if (selectedTrainer != null){
+                String trainerID = selectedTrainer.getId();
+                Course course = new Course(Id(),courseName,trainerID);
 
+                if (institutionManagementCourse.existsCourse(course)){
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Duplicate Course");
+                    alert.setHeaderText("Course Already Exists");
+                    alert.setContentText("An course with the same name already exists. Do you want to add this course anyway?");
+
+                    if (alert.showAndWait().get() != ButtonType.OK) {
+                        return;
+                    }
+                }
+
+                courses.add(course);
+                CourseData.addCourse(course);
+                institutionManagementCourse.add(course);
+                tableViewMakeCourse.refresh();
+
+                txtFullName.clear();
+                comboBoxTrainer.getSelectionModel().clearSelection();
+                loadData();
+            }
+        }
+    }
+
+  /*  @FXML
+    private void removeCourse() {
+        Course selectedCourse = tableViewMakeCourse.getSelectionModel().getSelectedItem();
+        if (selectedCourse != null){
+            courses.remove(selectedCourse);
+            institutionManagementCourse.remove(selectedCourse.getId());
+            CourseData.deleteCourse(selectedCourse);
+        }
+    }*/
+
+    @FXML
+    private void removeCourse() {
+        Course selectedCourse = tableViewMakeCourse.getSelectionModel().getSelectedItem();
+        if (selectedCourse != null) {
+            // Skontrolujeme, či má kurz zapísaných študentov
+            boolean hasStudents = courseWithStudents.stream()
+                    .anyMatch(cws -> cws.getCourseID().equals(selectedCourse.getId()));
+
+            if (hasStudents) {
+                // Zobraziť upozornenie s potvrdením
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirm Deletion");
+                alert.setHeaderText("Course is Active");
+                alert.setContentText("This course has enrolled students. Are you sure you want to delete this course and all its connections?");
+
+                if (alert.showAndWait().get() == ButtonType.OK) {
+                    // Odstrániť všetky prepojenia s kurzom
+                    List<CourseWithStudent> connectionsToRemove = courseWithStudents.stream()
+                            .filter(cws -> cws.getCourseID().equals(selectedCourse.getId()))
+                            .toList();
+                    connectionsToRemove.forEach(cws -> {
+                        courseWithStudents.remove(cws);
+                        institutionManagementCourseWithStudent.remove(cws.getCourseID());
+                        CourseWithStudentData.removeActiveCourse(cws);
+                    });
+
+                    // Odstrániť kurz
+                    courses.remove(selectedCourse);
+                    institutionManagementCourse.remove(selectedCourse.getId());
+                    CourseData.deleteCourse(selectedCourse);
+                    tableViewMakeCourse.refresh();
+                }
+            } else {
+                // Odstrániť kurz bez upozornenia
+                courses.remove(selectedCourse);
+                institutionManagementCourse.remove(selectedCourse.getId());
+                CourseData.deleteCourse(selectedCourse);
+                tableViewMakeCourse.refresh();
+            }
+        }
+    }
+
+
+    @FXML
+    private void updateCourse() {
+        Course selectedCourse = tableViewMakeCourse.getSelectionModel().getSelectedItem();
+        if (selectedCourse !=null && ValidationUtil.validateInputCourse(txtFullName)){
+            selectedCourse.setName(txtFullName.getText().trim());
+            selectedCourse.setTrainerID(comboBoxTrainer.getSelectionModel().getSelectedItem().getId());
+
+            tableViewMakeCourse.refresh();
+            institutionManagementCourse.update(selectedCourse);
+            CourseData.updateCourse(selectedCourse);
+
+            txtFullName.clear();
+            comboBoxTrainer.getSelectionModel().clearSelection();
         }
     }
 
     @FXML
-    private void removeCourse() {
-    }
-
-    @FXML
-    private void updateCourse() {
-    }
-
-    @FXML
     private void addToCourse() {
+        Student selectedStudent = comboBoxStudent.getSelectionModel().getSelectedItem();
+        Course selectedCourse = comboBoxCourse.getSelectionModel().getSelectedItem();
+
+        if (selectedStudent != null && selectedCourse != null) {
+            // Zkontroluje, zda již záznam neexistuje
+            boolean exists = courseWithStudents.stream()
+                    .anyMatch(cws -> cws.getCourseID().equals(selectedCourse.getId()) && cws.getStudentID().equals(selectedStudent.getId()));
+
+            if (!exists) {
+                CourseWithStudent courseWithStudent = new CourseWithStudent(selectedCourse.getId(), selectedStudent.getId());
+                courseWithStudents.add(courseWithStudent);
+                CourseWithStudentData.addStudentToCourse(selectedStudent, selectedCourse);
+                institutionManagementCourseWithStudent.add(courseWithStudent);
+                tableViewCourse.refresh();
+            } else {
+                // Zobrazí výstrahu, pokud záznam již existuje
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Duplicate Entry");
+                alert.setHeaderText("Student Already Enrolled");
+                alert.setContentText("This student is already enrolled in the selected course.");
+                alert.showAndWait();
+            }
+        }
     }
+
 
     @FXML
     private void removeFromCourse() {
+        CourseWithStudent selectedCourseWithStudent = tableViewCourse.getSelectionModel().getSelectedItem();
+        if (selectedCourseWithStudent != null) {
+            courseWithStudents.remove(selectedCourseWithStudent);
+            institutionManagementCourseWithStudent.remove(selectedCourseWithStudent.getCourseID());
+            CourseWithStudentData.removeActiveCourse(selectedCourseWithStudent);
+            tableViewCourse.refresh();
+        }
     }
 
 

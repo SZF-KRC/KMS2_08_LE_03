@@ -14,16 +14,17 @@
                 <TableColumn fx:id="colStudent" prefWidth="114.0" text="Student Name" />
                 <TableColumn fx:id="colStudentEmail" prefWidth="168.0" text="Student Email" />
                 <TableColumn fx:id="colTrainer" prefWidth="115.0" text="Trainer Name" />
-                <TableColumn fx:id="colTrainerEmail" prefWidth="172.0" text="Trainer Email" />
+                <TableColumn fx:id="colTrainerEmail" text="Trainer Email" />
             </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
         </TableView>
-      <ComboBox layoutX="214.0" layoutY="30.0" prefWidth="150.0" />
-      <Label layoutX="251.0" layoutY="14.0" text="Select Course">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-
-
+        <ComboBox fx:id="comboBoxCourses" layoutX="214.0" layoutY="30.0" prefWidth="150.0" />
+        <Label layoutX="251.0" layoutY="14.0" text="Select Course">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
     </children>
 </AnchorPane>

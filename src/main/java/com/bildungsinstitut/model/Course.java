@@ -1,6 +1,9 @@
 package com.bildungsinstitut.model;
 
+import com.bildungsinstitut.database.EmployeeData;
 import com.bildungsinstitut.interfaces.Identifiable;
+
+import java.util.List;
 
 public class Course implements Identifiable {
     private String id;
@@ -38,4 +41,25 @@ public class Course implements Identifiable {
     public void setTrainerID(String trainerID) {
         this.trainerID = trainerID;
     }
+
+    public String getTrainerName(List<Employee> employees) {
+        for (Employee employee : employees) {
+            if (employee.getId().equals(this.trainerID)) {
+                return employee.getName();
+            }
+        }
+        return "Unknown";
+    }
+
+    public boolean hasSameAttributes(Course other) {
+        return this.name.equals(other.getName()) &&
+                this.trainerID.equals(other.getTrainerID());
+    }
+
+
+    @Override
+    public String toString() {
+        return name + " - " + getTrainerName(EmployeeData.getAllEmployees());
+    }
+
 }

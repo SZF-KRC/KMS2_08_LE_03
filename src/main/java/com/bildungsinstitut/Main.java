@@ -1,33 +1,3 @@
-/*
-package com.bildungsinstitut;
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-
-import javafx.stage.Stage;
-
-import java.io.IOException;
-
-public class Main extends Application {
-
-    @Override
-    public void start(Stage stage) throws IOException {
-
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/bildungsinstitut/bildungsinstitut/MainWindow.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 750, 400);
-        stage.setTitle("Bildungsinstitute");
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch();
-    }
-
-}
-*/
 package com.bildungsinstitut;
 
 import javafx.application.Application;
@@ -39,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main extends Application {
 
@@ -46,7 +17,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         try {
             // Load image
-            Image image = new Image(getClass().getResourceAsStream("/com/bildungsinstitut/bildungsinstitut/pictures/logo.png"));
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/bildungsinstitut/bildungsinstitut/pictures/logo.png")));
             ImageView imageView = new ImageView(image);
 
             // Set ImageView properties
