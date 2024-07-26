@@ -1,7 +1,6 @@
 package com.bildungsinstitut.database;
 
 import com.bildungsinstitut.model.Employee;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

@@ -24,7 +24,7 @@ public class CourseData {
             e.printStackTrace();
         }
     }
-    // Metóda na získanie všetkých kurzov
+
     public static List<Course> getAllCourses() {
         List<Course> courses = new ArrayList<>();
         String query = "SELECT * FROM course";
@@ -45,7 +45,6 @@ public class CourseData {
         return courses;
     }
 
-    // Metóda na aktualizáciu kurzu
     public static void updateCourse(Course course) {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String query = "UPDATE course SET name = ? WHERE id = ?";
@@ -59,7 +58,6 @@ public class CourseData {
         }
     }
 
-    // Metóda na odstránenie kurzu
     public static void deleteCourse(Course course) {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String query = "DELETE FROM course WHERE id = ?";

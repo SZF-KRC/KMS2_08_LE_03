@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 
 import java.util.List;
 
@@ -77,31 +78,6 @@ public class CourseWindowController {
     private final InstitutionManagement<Course> institutionManagementCourse = new InstitutionManagement<>();
     private final InstitutionManagement<CourseWithStudent> institutionManagementCourseWithStudent = new InstitutionManagement<>();
 
-    private void loadData(){
-        courses.clear();
-        courseWithStudents.clear();
-        employees.clear();
-
-        courses.addAll(CourseData.getAllCourses());
-        courses.forEach(institutionManagementCourse::add);
-
-        courseWithStudents.addAll(CourseWithStudentData.getAllDataFromCourses());
-        courseWithStudents.forEach(institutionManagementCourseWithStudent::add);
-
-        employees.addAll(EmployeeData.getAllEmployees());
-        comboBoxTrainer.setItems(FXCollections.observableArrayList(employees));
-
-        comboBoxCourse.setItems(FXCollections.observableArrayList(courses));
-
-        List<Student> students = StudentData.getAllStudents();
-        comboBoxStudent.setItems(FXCollections.observableArrayList(students));
-
-        tableViewMakeCourse.setItems(courses);
-        tableViewCourse.setItems(courseWithStudents);
-    }
-
-
-
     @FXML
     public void initialize(){
         setupButtonHandlers(btnAddCourse);
@@ -158,9 +134,47 @@ public class CourseWindowController {
             }
         });
 
+        tableViewCourse.setRowFactory(tv -> new TableRow<CourseWithStudent>() {
+            @Override
+            protected void updateItem(CourseWithStudent item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("-fx-background-color: #E0F7FA;");  // Set the background color for empty rows
+                } else {
+                    if (isSelected()) {
+                        setStyle("-fx-background-color: #3b6770;");  // Set the background color for selected row
+                    } else {
+                        setStyle("-fx-background-color: " + (getIndex() % 2 == 0 ? "#f0f8ff" : "#e6e6fa") + ";");
+                    }
+                }
+            }
+        });
+
+
+        tableViewMakeCourse.setRowFactory(tv -> new TableRow<Course>() {
+            @Override
+            protected void updateItem(Course item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("-fx-background-color: #E0F7FA;");  // Set the background color for empty rows
+                } else {
+                    if (isSelected()) {
+                        setStyle("-fx-background-color: #3b6770;");  // Set the background color for selected row
+                    } else {
+                        setStyle("-fx-background-color: " + (getIndex() % 2 == 0 ? "#f0f8ff" : "#e6e6fa") + ";");
+                    }
+                }
+            }
+        });
+
+        // Nastavenie pozadia pre TableView keď je prázdna
+        StackPane stackPane = new StackPane();
+        stackPane.setStyle("-fx-background-color: #E0F7FA;");
+        tableViewCourse.setPlaceholder(stackPane);
+        tableViewMakeCourse.setPlaceholder(stackPane);
+
         loadData();
     }
-
 
     @FXML
     private void addCourse() {
@@ -187,41 +201,29 @@ public class CourseWindowController {
                 CourseData.addCourse(course);
                 institutionManagementCourse.add(course);
                 tableViewMakeCourse.refresh();
-
-                txtFullName.clear();
-                comboBoxTrainer.getSelectionModel().clearSelection();
+                clearInput();
                 loadData();
             }
         }
     }
 
-  /*  @FXML
-    private void removeCourse() {
-        Course selectedCourse = tableViewMakeCourse.getSelectionModel().getSelectedItem();
-        if (selectedCourse != null){
-            courses.remove(selectedCourse);
-            institutionManagementCourse.remove(selectedCourse.getId());
-            CourseData.deleteCourse(selectedCourse);
-        }
-    }*/
-
     @FXML
     private void removeCourse() {
         Course selectedCourse = tableViewMakeCourse.getSelectionModel().getSelectedItem();
         if (selectedCourse != null) {
-            // Skontrolujeme, či má kurz zapísaných študentov
+            // We check if the course has enrolled studentsv
             boolean hasStudents = courseWithStudents.stream()
                     .anyMatch(cws -> cws.getCourseID().equals(selectedCourse.getId()));
 
             if (hasStudents) {
-                // Zobraziť upozornenie s potvrdením
+                // Show notification with confirmation
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirm Deletion");
                 alert.setHeaderText("Course is Active");
                 alert.setContentText("This course has enrolled students. Are you sure you want to delete this course and all its connections?");
 
                 if (alert.showAndWait().get() == ButtonType.OK) {
-                    // Odstrániť všetky prepojenia s kurzom
+                    // Remove all links to the course
                     List<CourseWithStudent> connectionsToRemove = courseWithStudents.stream()
                             .filter(cws -> cws.getCourseID().equals(selectedCourse.getId()))
                             .toList();
@@ -231,14 +233,14 @@ public class CourseWindowController {
                         CourseWithStudentData.removeActiveCourse(cws);
                     });
 
-                    // Odstrániť kurz
+                    // remove course
                     courses.remove(selectedCourse);
                     institutionManagementCourse.remove(selectedCourse.getId());
                     CourseData.deleteCourse(selectedCourse);
                     tableViewMakeCourse.refresh();
                 }
             } else {
-                // Odstrániť kurz bez upozornenia
+                // Delete course without notice
                 courses.remove(selectedCourse);
                 institutionManagementCourse.remove(selectedCourse.getId());
                 CourseData.deleteCourse(selectedCourse);
@@ -246,7 +248,6 @@ public class CourseWindowController {
             }
         }
     }
-
 
     @FXML
     private void updateCourse() {
@@ -259,8 +260,7 @@ public class CourseWindowController {
             institutionManagementCourse.update(selectedCourse);
             CourseData.updateCourse(selectedCourse);
 
-            txtFullName.clear();
-            comboBoxTrainer.getSelectionModel().clearSelection();
+            clearInput();
         }
     }
 
@@ -270,7 +270,7 @@ public class CourseWindowController {
         Course selectedCourse = comboBoxCourse.getSelectionModel().getSelectedItem();
 
         if (selectedStudent != null && selectedCourse != null) {
-            // Zkontroluje, zda již záznam neexistuje
+            //Checks whether the record already exists
             boolean exists = courseWithStudents.stream()
                     .anyMatch(cws -> cws.getCourseID().equals(selectedCourse.getId()) && cws.getStudentID().equals(selectedStudent.getId()));
 
@@ -281,16 +281,17 @@ public class CourseWindowController {
                 institutionManagementCourseWithStudent.add(courseWithStudent);
                 tableViewCourse.refresh();
             } else {
-                // Zobrazí výstrahu, pokud záznam již existuje
+                // Displays a warning if the record already exists
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Duplicate Entry");
                 alert.setHeaderText("Student Already Enrolled");
                 alert.setContentText("This student is already enrolled in the selected course.");
                 alert.showAndWait();
             }
+            clearInput();
+
         }
     }
-
 
     @FXML
     private void removeFromCourse() {
@@ -303,8 +304,6 @@ public class CourseWindowController {
         }
     }
 
-
-
     private void setupButtonHandlers(Button button) {
         button.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> button.setStyle("-fx-background-color: #c3d8ff; -fx-font-weight: bold; -fx-font-size: 12px;"));
         button.addEventHandler(MouseEvent.MOUSE_EXITED, event -> button.setStyle("-fx-background-color: #74BFcf; -fx-font-weight: bold; -fx-font-size: 12px;"));
@@ -312,9 +311,39 @@ public class CourseWindowController {
         button.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> button.setStyle("-fx-background-color: #c3d8ff; -fx-font-weight: bold; -fx-font-size: 12px;"));
     }
 
-
-
     private String Id(){
         return UniqueID.generateUniqueID();
+    }
+
+    private void clearInput(){
+        comboBoxStudent.getSelectionModel().clearSelection();
+        comboBoxCourse.getSelectionModel().clearSelection();
+        txtFullName.clear();
+        comboBoxTrainer.getSelectionModel().clearSelection();
+        tableViewCourse.getSelectionModel().clearSelection();
+        tableViewMakeCourse.getSelectionModel().clearSelection();
+    }
+
+    private void loadData(){
+        courses.clear();
+        courseWithStudents.clear();
+        employees.clear();
+
+        courses.addAll(CourseData.getAllCourses());
+        courses.forEach(institutionManagementCourse::add);
+
+        courseWithStudents.addAll(CourseWithStudentData.getAllDataFromCourses());
+        courseWithStudents.forEach(institutionManagementCourseWithStudent::add);
+
+        employees.addAll(EmployeeData.getAllEmployees());
+        comboBoxTrainer.setItems(FXCollections.observableArrayList(employees));
+
+        comboBoxCourse.setItems(FXCollections.observableArrayList(courses));
+
+        List<Student> students = StudentData.getAllStudents();
+        comboBoxStudent.setItems(FXCollections.observableArrayList(students));
+
+        tableViewMakeCourse.setItems(courses);
+        tableViewCourse.setItems(courseWithStudents);
     }
 }

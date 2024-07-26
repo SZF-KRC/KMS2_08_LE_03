@@ -45,8 +45,6 @@ public class ValidationUtil {
         return true;
     }
 
-
-
     public static boolean validateInputsEmployee(TextField txtFullName,TextField txtEmail, TextField txtAge, TextField txtPosition){
         if (!isNotEmpty(txtFullName.getText()) || !isAlpha(txtFullName.getText())){
             showAlert("Invalid Full Name", "Full Name must contain only letters and cannot be empty.");

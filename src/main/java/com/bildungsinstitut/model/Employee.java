@@ -19,8 +19,7 @@ private String position;
 
     @Override
     public boolean hasSameAttributes(Person other) {
-        if (other instanceof Employee) {
-            Employee otherEmployee = (Employee) other;
+        if (other instanceof Employee otherEmployee) {
             return super.hasSameAttributes(other) &&
                     this.position.equals(otherEmployee.getPosition());
         }

@@ -14,7 +14,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.StackPane;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,21 +36,20 @@ public class HomeWindowController {
     private TableColumn<CourseWithStudent, String> colTrainerEmail;
 
     @FXML
-    private ComboBox<String> comboBoxCourses;  // Použijeme String místo Course
+    private ComboBox<String> comboBoxCourses;
 
     @FXML
     private TableView<CourseWithStudent> tableView;
 
-    private final ObservableList<Course> coursesWithStudents = FXCollections.observableArrayList();
     private final ObservableList<CourseWithStudent> courseWithStudentsList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        // Načtení kurzů se studenty do ComboBoxu
+        // Loading courses with students into ComboBox
         List<CourseWithStudent> allCourseWithStudents = CourseWithStudentData.getAllDataFromCourses();
         List<Course> courses = CourseData.getAllCourses();
 
-        // Filtrujeme jedinečné názvy kurzů a seřadíme podle abecedy
+        // We filter unique course names and sort them alphabetically
         List<String> uniqueCourseNames = courses.stream()
                 .filter(course -> allCourseWithStudents.stream()
                         .anyMatch(cws -> cws.getCourseID().equals(course.getId())))
@@ -59,13 +60,13 @@ public class HomeWindowController {
 
         comboBoxCourses.setItems(FXCollections.observableArrayList(uniqueCourseNames));
 
-        // Předdefinované první zobrazení v ComboBoxu
+        // Predefined first display in ComboBox
         if (!uniqueCourseNames.isEmpty()) {
             comboBoxCourses.getSelectionModel().select(0);
             loadCourseDetails(uniqueCourseNames.get(0));
         }
 
-        // Nastavení sloupců TableView
+        // TableView column settings
         colStudent.setCellValueFactory(cellData -> {
             CourseWithStudent courseWithStudent = cellData.getValue();
             Student student = StudentData.getAllStudents().stream()
@@ -115,6 +116,27 @@ public class HomeWindowController {
                 loadCourseDetails(newValue);
             }
         });
+
+        tableView.setRowFactory(tv -> new TableRow<CourseWithStudent>() {
+            @Override
+            protected void updateItem(CourseWithStudent item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("-fx-background-color: #E0F7FA;");  // Set the background color for empty rows
+                } else {
+                    if (isSelected()) {
+                        setStyle("-fx-background-color: #3b6770;");  // Set the background color for selected row
+                    } else {
+                        setStyle("-fx-background-color: " + (getIndex() % 2 == 0 ? "#f0f8ff" : "#e6e6fa") + ";");
+                    }
+                }
+            }
+        });
+
+        // Setting the background for the TableView when it is empty
+        StackPane stackPane = new StackPane();
+        stackPane.setStyle("-fx-background-color: #E0F7FA;");
+        tableView.setPlaceholder(stackPane);
     }
 
     private void loadCourseDetails(String courseName) {

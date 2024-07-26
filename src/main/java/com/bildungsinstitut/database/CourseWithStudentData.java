@@ -57,5 +57,4 @@ public class CourseWithStudentData {
             e.printStackTrace();
         }
     }
-
 }

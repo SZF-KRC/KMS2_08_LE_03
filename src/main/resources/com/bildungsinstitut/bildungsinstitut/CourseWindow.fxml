@@ -23,8 +23,8 @@
 
         <Label layoutX="8.0" layoutY="4.0" style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Course Management" />
         <Label layoutX="186.0" layoutY="47.0" style="-fx-font-weight: bold; -fx-font-size: 12px;" text="Course name" />
-        <Label layoutX="39.0" layoutY="264.0" text="Select course" />
-        <Label layoutX="39.0" layoutY="215.0" text="Select student" />
+        <Label layoutX="39.0" layoutY="264.0" style="-fx-font-weight: bold; -fx-font-size: 12px;" text="Select course" />
+        <Label layoutX="39.0" layoutY="215.0" style="-fx-font-weight: bold; -fx-font-size: 12px;" text="Select student" />
         <Label layoutX="186.0" layoutY="113.0" style="-fx-font-weight: bold; -fx-font-size: 12px;" text="Select trainer" />
 
 

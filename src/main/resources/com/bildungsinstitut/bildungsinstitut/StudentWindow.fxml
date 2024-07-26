@@ -9,17 +9,18 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bildungsinstitut.view.StudentWindowController">
    <children>
-       <TableView fx:id="tableView" layoutX="197.0" layoutY="45.0" prefHeight="341.0" prefWidth="389.0">
+       <TableView fx:id="tableView" layoutX="197.0" layoutY="45.0" prefHeight="341.0" prefWidth="400.0">
            <columns>
-               <TableColumn fx:id="coName" prefWidth="100.0" text="Full Name" />
-               <TableColumn fx:id="colAge" prefWidth="75.0" text="Age" />
-               <TableColumn fx:id="colEmail" prefWidth="100.0" text="Email" />
+               <TableColumn fx:id="coName" prefWidth="150.0" text="Full Name" />
+               <TableColumn fx:id="colAge" prefWidth="35.0" text="Age" />
+               <TableColumn fx:id="colEmail" prefWidth="200.0" text="Email" />
            </columns>
        </TableView>
 
        <TextField fx:id="txtFullName" layoutX="28.0" layoutY="49.0" />
-       <TextField fx:id="txtEmail" layoutX="28.0" layoutY="149.0" />
        <TextField fx:id="txtAge" layoutX="28.0" layoutY="99.0" />
+       <TextField fx:id="txtEmail" layoutX="28.0" layoutY="149.0" />
+
 
        <Label layoutX="11.0" layoutY="4.0" style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Student Management" />
        <Label layoutX="28.0" layoutY="82.0" style="-fx-font-weight: bold; -fx-font-size: 12px;" text="Age" />

@@ -1,12 +1,12 @@
 package com.bildungsinstitut.database;
 
 import com.bildungsinstitut.model.Student;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentData {
+
     public static void addStudent(Student student){
         try(Connection connection = DatabaseConnection.getConnection()){
             String query = "INSERT INTO student (id,name,age,email) VALUES (?,?,?,?)";
@@ -46,17 +46,16 @@ public class StudentData {
         return students;
     }
 
-
     public static void removeStudent(Student student){
         try (Connection connection = DatabaseConnection.getConnection()) {
-            // Najprv odstránime záznamy z tabuľky student_course
+            // First, we delete the records from the student_course table
             String studentCourseQuery = "DELETE FROM student_course WHERE student_id = ?";
             try (PreparedStatement statement = connection.prepareStatement(studentCourseQuery)) {
                 statement.setString(1, student.getId());
                 statement.executeUpdate();
             }
 
-            // Potom odstránime študenta z tabuľky student
+            // Then we delete the student from the student table
             String studentQuery = "DELETE FROM student WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(studentQuery)) {
                 statement.setString(1, student.getId());

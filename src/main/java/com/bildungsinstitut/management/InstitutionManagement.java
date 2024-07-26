@@ -32,11 +32,9 @@ public class InstitutionManagement<T extends Identifiable> {
     }
 
     public boolean exists(T item) {
-        if (item instanceof Person) {
-            Person newPerson = (Person) item;
+        if (item instanceof Person newPerson) {
             for (T existingItem : items.values()) {
-                if (existingItem instanceof Person) {
-                    Person existingPerson = (Person) existingItem;
+                if (existingItem instanceof Person existingPerson) {
                     if (existingPerson.hasSameAttributes(newPerson)) {
                         return true;
                     }
@@ -47,11 +45,9 @@ public class InstitutionManagement<T extends Identifiable> {
     }
 
     public boolean existsCourse(T item) {
-        if (item instanceof Course) {
-            Course newCourse = (Course) item;
+        if (item instanceof Course newCourse) {
             for (T existingItem : items.values()) {
-                if (existingItem instanceof Course) {
-                    Course existingCourse = (Course) existingItem;
+                if (existingItem instanceof Course existingCourse) {
                     if (existingCourse.hasSameAttributes(newCourse)) {
                         return true;
                     }
@@ -62,11 +58,9 @@ public class InstitutionManagement<T extends Identifiable> {
     }
 
     public boolean existEmail(T item){
-        if (item instanceof Person){
-            Person newPerson = (Person) item;
+        if (item instanceof Person newPerson){
             for (T existingItem : items.values()){
-                if (existingItem instanceof Person){
-                    Person existingPerson = (Person) existingItem;
+                if (existingItem instanceof Person existingPerson){
                     if (existingPerson.hasSameEmail(newPerson)){
                         return true;
                     }

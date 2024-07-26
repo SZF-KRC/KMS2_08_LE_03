@@ -10,6 +10,8 @@
    <children>
       <StackPane fx:id="contentPane" layoutX="127.0" layoutY="10.0" prefHeight="383.0" prefWidth="467.0" />
 
+      <StackPane fx:id="imagePane" layoutX="15.0" layoutY="5.0" prefHeight="94.0" prefWidth="100.0" />
+
       <Button fx:id="btnHome" layoutX="32.0" layoutY="114.0" mnemonicParsing="false" onAction="#btnHomeAction" prefHeight="25.0" prefWidth="77.0" style="-fx-background-color: #74BFcf; -fx-font-weight: bold; -fx-font-size: 12px;" text="Home" />
       <Button fx:id="btnStudents" layoutX="32.0" layoutY="152.0" mnemonicParsing="false" onAction="#btnStudentsAction" prefHeight="25.0" prefWidth="77.0" style="-fx-background-color: #74BFcf; -fx-font-weight: bold; -fx-font-size: 12px;" text="Students" />
       <Button fx:id="btnEmployees" layoutX="32.0" layoutY="193.0" mnemonicParsing="false" onAction="#btnEmployeesAction" prefHeight="25.0" prefWidth="77.0" style="-fx-background-color: #74BFcf; -fx-font-weight: bold; -fx-font-size: 12px;" text="Trainers" />

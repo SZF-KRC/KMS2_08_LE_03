@@ -95,6 +95,8 @@ public class EmployeeWindowController {
         StackPane stackPane = new StackPane();
         stackPane.setStyle("-fx-background-color: #E0F7FA;");
         tableView.setPlaceholder(stackPane);
+
+
         loadEmployees();
     }
 
@@ -133,6 +135,7 @@ public class EmployeeWindowController {
             employeeList.add(employee);
             EmployeeData.addEmployee(employee);
             institutionManagement.add(employee);
+            clearInput();
 
         }
     }
@@ -140,7 +143,6 @@ public class EmployeeWindowController {
     private String Id(){
         return UniqueID.generateUniqueID();
     }
-
 
     @FXML
     private void updateEmployee() {
@@ -154,6 +156,8 @@ public class EmployeeWindowController {
             tableView.refresh();
             institutionManagement.update(selectedEmployee);
             EmployeeData.updateEmployee(selectedEmployee);
+
+            clearInput();
         }
     }
 
@@ -177,5 +181,13 @@ public class EmployeeWindowController {
         button.addEventHandler(MouseEvent.MOUSE_EXITED, event -> button.setStyle("-fx-background-color: #74BFcf; -fx-font-weight: bold; -fx-font-size: 12px;"));
         button.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> button.setStyle("-fx-background-color: #638ac8; -fx-font-weight: bold; -fx-font-size: 12px;"));
         button.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> button.setStyle("-fx-background-color: #c3d8ff; -fx-font-weight: bold; -fx-font-size: 12px;"));
+    }
+
+    private void clearInput(){
+        txtAge.clear();
+        txtEmail.clear();
+        txtFullName.clear();
+        txtPosition.clear();
+        tableView.getSelectionModel().clearSelection();
     }
 }

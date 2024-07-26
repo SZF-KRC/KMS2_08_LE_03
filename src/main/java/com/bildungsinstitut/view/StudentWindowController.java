@@ -89,7 +89,6 @@ public class StudentWindowController {
         loadStudents();
     }
 
-
     @FXML
     private void addStudent(){
         if (ValidationUtil.validateInputsStudent(txtFullName,txtEmail,txtAge)){
@@ -124,6 +123,8 @@ public class StudentWindowController {
             studentList.add(student);
             StudentData.addStudent(student);
             institutionManagement.add(student);
+            clearInput();
+
         }
     }
 
@@ -138,6 +139,7 @@ public class StudentWindowController {
             tableView.refresh();
             institutionManagement.update(selectedStudent);
             StudentData.updateStudent(selectedStudent);
+            clearInput();
         }
     }
 
@@ -165,5 +167,12 @@ public class StudentWindowController {
 
     private String Id(){
         return UniqueID.generateUniqueID();
+    }
+
+    private void clearInput(){
+        txtFullName.clear();
+        txtEmail.clear();
+        txtAge.clear();
+        tableView.getSelectionModel().clearSelection();
     }
 }
