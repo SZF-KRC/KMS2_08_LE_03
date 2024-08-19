@@ -23,9 +23,9 @@ public class CourseWithStudent implements Identifiable {
         return studentID;
     }
 
-    public void setStudentID(String studentID) {
+  /*  public void setStudentID(String studentID) {
         this.studentID = studentID;
-    }
+    }*/
 
     @Override
     public String getId() {
