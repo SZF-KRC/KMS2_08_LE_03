@@ -336,12 +336,12 @@ public class CourseWindowController {
         courseWithStudents.forEach(institutionManagementCourseWithStudent::add);
 
         employees.addAll(EmployeeData.getAllEmployees());
-        comboBoxTrainer.setItems(FXCollections.observableArrayList(employees));
+        comboBoxTrainer.setItems(FXCollections.observableArrayList(employees).sorted());
 
-        comboBoxCourse.setItems(FXCollections.observableArrayList(courses));
+        comboBoxCourse.setItems(FXCollections.observableArrayList(courses).sorted());
 
         List<Student> students = StudentData.getAllStudents();
-        comboBoxStudent.setItems(FXCollections.observableArrayList(students));
+        comboBoxStudent.setItems(FXCollections.observableArrayList(students).sorted());
 
         tableViewMakeCourse.setItems(courses);
         tableViewCourse.setItems(courseWithStudents);
